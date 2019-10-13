@@ -15,7 +15,21 @@ const writeDatabase = (data) => {
   fs.writeFileSync('database.json', JSON.stringify({...oldData, ...data}));
 };
 
-app.get('/', (req, res) => res.send("welcome to my proxy server"));
+app.get('/', (req, res) => res.send(
+    `<h1>Welcome to UVM2: proxy server.</h1>
+    <h3>/getUser?netId=netid</h3>
+        returns user information</br>
+    <h3>/addUser?netId=netid</h3>
+        creates user</br>
+        returns query</br>
+    <h3>/addClasses?netId=netid&classes=RN1,RN2,RN3</h3>
+        adds classes to user</br>
+        returns query</br>
+    <h3>/deleteClass?netId=netid&classes=RN1,RN2,RN3</h3>
+        removes classes from user</br>
+        returns query</br>
+    `
+    ));
 
 app.get('/health', (req, res) => res.status(200).json({healthy: true}));
 
