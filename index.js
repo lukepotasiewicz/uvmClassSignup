@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const app = express();
-const port = 6969;
+const port = 6789;
 
 
 const {
@@ -18,8 +18,11 @@ chrome.setDefaultService(new chrome.ServiceBuilder(chromedriver.path).build());
 
 const readDatabase = () => JSON.parse(fs.readFileSync('database.json'));
 
-const getUser = (res, netId, pass) => {
+const getUser = (res, netId, pass, test = false) => {
     const jsonData = readDatabase();
+    if (test) {
+        return jsonData[netId];
+    }
     if (!jsonData[netId]) {
         res.status(500).json({error: "User not found"}).end();
         return null;
@@ -100,7 +103,7 @@ app.get('/deleteClass', (req, res) => {
 
 app.get("/register", async (req, res) => {
     if (!req.query.netId || !req.query.password) return res.status(400).json({error: "Bad request"});
-    let userData = getUser(res, req.query.netId, req.query.password);
+    let userData = getUser(res, req.query.netId, req.query.password, true);
     if (req.query.test === "true") {
         userData = {};
         userData.netId = req.query.netId;
