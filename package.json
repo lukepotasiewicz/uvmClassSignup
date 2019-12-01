@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/lukepotasiewicz/uvmClassSignup#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "chromedriver": "^78.0.1",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "jest": "^24.9.0",
+    "selenium-webdriver": "^2.53.3"
   }
 }

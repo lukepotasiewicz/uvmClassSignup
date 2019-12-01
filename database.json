@@ -1,1 +1,10 @@
-{"lmpotasi":{"netId":"lmpotasi","password":"testPassword","classes":["asdf","asdf"]}}
+{
+  "lmpotasi": {
+    "netId": "lmpotasi",
+    "password": "test",
+    "classes": [
+      "12345",
+      "12346"
+    ]
+  }
+}
