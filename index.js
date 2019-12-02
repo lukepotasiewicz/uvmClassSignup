@@ -70,12 +70,14 @@ app.get('/getUser', (req, res) => {
     if (!req.query.netId || !req.query.password) return res.status(400).json({error: "Bad request"});
     const userData = getUser(res, req.query.netId, req.query.password);
     if (!userData) return null;
+    console.log("/getUser: " + req.query.netId);
     return res.status(userData.error ? 500 : 200).json(userData);
 });
 
 // ----------- ADD -----------
 app.get('/addUser', (req, res) => {
     if (!req.query.netId || !req.query.password) return res.status(400).json({error: "Bad request"});
+    console.log("/addUser: " + req.query.netId);
     const newUser = {netId: req.query.netId, password: req.query.password, classes: []};
     writeDatabase({[req.query.netId]: newUser});
     return res.status(200).json({queryString: req.query});
@@ -85,6 +87,7 @@ app.get('/addClasses', (req, res) => {
     if (!req.query.netId || !req.query.classes || !req.query.password) return res.status(400).json({error: "Bad request"});
     const userData = getUser(res, req.query.netId, req.query.password);
     if (!userData) return null;
+    console.log("/addClasses: " + req.query.netId);
     userData.classes = userData.classes.concat(req.query.classes.split(','));
     writeDatabase({[req.query.netId]: userData});
     return res.status(200).json({queryString: req.query});
@@ -95,6 +98,7 @@ app.get('/deleteClass', (req, res) => {
     if (!req.query.netId || !req.query.classes || !req.query.password) return res.status(400).json({error: "Bad request"});
     const userData = getUser(res, req.query.netId, req.query.password);
     if (!userData) return null;
+    console.log("/deleteClass: " + req.query.netId);
     const classesToRemove = req.query.classes.split(',');
     userData.classes = userData.classes.reduce((acc, c) => classesToRemove.includes(c) ? acc : [...acc, c], []);
     writeDatabase({[req.query.netId]: userData});
@@ -111,6 +115,7 @@ app.get("/register", async (req, res) => {
         userData.classes = req.query.classes.split(',');
     }
     if (!userData) return null;
+    console.log("/register: " + req.query.netId);
     try {
         const driver = new webdriver.Builder()
             .withCapabilities(webdriver.Capabilities.chrome())
@@ -140,16 +145,22 @@ app.get("/register", async (req, res) => {
         let image = await driver.takeScreenshot();
         fs.writeFileSync('out.png', image, 'base64');
         driver.quit();
-        res.writeHead(200, {
-            "Content-Type": "application/octet-stream",
-            "Content-Disposition": "attachment; filename=out.png"
-        });
+        // res.writeHead(200, {
+        //     "Content-Type": "application/octet-stream",
+        //     "Content-Disposition": "attachment; filename=out.png"
+        // });
         fs.createReadStream("./out.png").pipe(res);
     } catch (e) {
       console.log(e);
       return res.status(200).json({success: false, error: e});
     }
     return res.status(200).json({success: true});
+});
+
+app.get('/testLogToConsole', (req, res) => {
+    if (!req.query.data) return res.status(400).json({error: "Bad request"});
+    console.log("/testLogToConsole: " + req.query.data);
+    return res.status(200).send("logged :)").end();
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
